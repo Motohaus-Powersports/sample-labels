@@ -6,21 +6,15 @@
   <title>Sample Label Printer</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-
-    /* ─── SCREEN STYLES ─────────────────────────────────────── */
-
+ 
     :root {
       --ink: #0f0f0f;
       --mid: #555;
-      --rule: #d0d0d0;
       --bg: #f2f1ee;
-      --card: #ffffff;
-      --accent: #1a1a1a;
-      --badge-border: 1.2px solid #0f0f0f;
     }
-
+ 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
     body {
       background: var(--bg);
       font-family: 'DM Sans', sans-serif;
@@ -32,12 +26,9 @@
       gap: 40px;
       padding: 40px 20px;
     }
-
-    /* header */
-    .screen-header {
-      text-align: center;
-    }
-
+ 
+    .screen-header { text-align: center; }
+ 
     .screen-header h1 {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -46,21 +37,20 @@
       color: var(--mid);
       font-weight: 500;
     }
-
+ 
     .screen-header p {
       font-size: 12px;
       color: #999;
       margin-top: 6px;
     }
-
-    /* label preview wrapper */
+ 
     .preview-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 20px;
     }
-
+ 
     .preview-label {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -68,19 +58,16 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
-
-    /* the label itself — shown at 4x scale on screen */
+ 
     .label-outer {
       box-shadow: 0 4px 32px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
       border-radius: 3px;
       overflow: hidden;
-      /* 50mm × 20mm at 96dpi screen = 189×76px, scaled 4x for visibility */
       transform: scale(4);
       transform-origin: top center;
-      margin-bottom: calc(76px * 3); /* compensate for scale */
+      margin-bottom: calc(76px * 3);
     }
-
-    /* print button */
+ 
     .print-btn {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -94,9 +81,9 @@
       border-radius: 2px;
       transition: background 0.15s;
     }
-
+ 
     .print-btn:hover { background: #333; }
-
+ 
     .print-hint {
       font-size: 11px;
       color: #aaa;
@@ -104,19 +91,18 @@
       line-height: 1.6;
       max-width: 340px;
     }
-
+ 
     .print-hint strong { color: var(--mid); }
-
-    /* error state */
+ 
     .error-state {
       text-align: center;
       padding: 40px;
       background: #fff;
       border-radius: 4px;
       border: 1px solid #e0e0e0;
-      max-width: 400px;
+      max-width: 440px;
     }
-
+ 
     .error-state h2 {
       font-family: 'DM Mono', monospace;
       font-size: 13px;
@@ -124,13 +110,9 @@
       margin-bottom: 12px;
       color: var(--ink);
     }
-
-    .error-state p {
-      font-size: 12px;
-      color: var(--mid);
-      line-height: 1.7;
-    }
-
+ 
+    .error-state p { font-size: 12px; color: var(--mid); line-height: 1.7; }
+ 
     .error-state code {
       display: block;
       margin-top: 16px;
@@ -143,99 +125,93 @@
       word-break: break-all;
       text-align: left;
     }
-
-    /* ─── THE LABEL (screen + print shared) ─────────────────── */
-
+ 
+    /* ─── LABEL ─────────────────────────────────────────────── */
+ 
     .label {
       width: 50mm;
       height: 20mm;
       background: #fff;
-      padding: 1.4mm 1.8mm 1.2mm 1.8mm;
+      padding: 1.5mm 2mm;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 0.4mm;
+      gap: 0.6mm;
       font-family: 'DM Mono', monospace;
-      position: relative;
     }
-
+ 
     .top-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 1mm;
+      align-items: center;
+      gap: 1.5mm;
     }
-
+ 
     .sample-ref {
       font-size: 5pt;
       font-weight: 500;
-      color: #111;
-      letter-spacing: 0.04em;
+      color: #777;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       line-height: 1;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 28mm;
     }
-
+ 
     .status-badge {
       font-size: 4pt;
       font-weight: 500;
       color: #111;
       border: 0.5pt solid #111;
-      padding: 0.3mm 0.9mm;
+      border-radius: 1.5pt;
+      padding: 0.3mm 1mm;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      line-height: 1.3;
+      line-height: 1.4;
       white-space: nowrap;
       flex-shrink: 0;
     }
-
+ 
     .sample-name {
-      font-size: 7.5pt;
+      font-size: 8pt;
       font-weight: 500;
       color: #000;
-      line-height: 1.05;
+      line-height: 1.1;
+      align-self: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      align-self: center;
       letter-spacing: -0.01em;
     }
-
+ 
     .bottom-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      border-top: 0.3pt solid #ccc;
-      padding-top: 0.5mm;
+      border-top: 0.3pt solid #ddd;
+      padding-top: 0.6mm;
     }
-
+ 
     .supplier {
       font-size: 4pt;
-      color: #555;
+      color: #666;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 28mm;
+      max-width: 26mm;
       letter-spacing: 0.02em;
     }
-
+ 
     .date {
       font-size: 4pt;
-      color: #555;
+      color: #666;
       white-space: nowrap;
       letter-spacing: 0.02em;
     }
-
-    /* ─── PRINT STYLES ───────────────────────────────────────── */
-
+ 
+    /* ─── PRINT ─────────────────────────────────────────────── */
+ 
     @media print {
-      @page {
-        size: 50mm 20mm;
-        margin: 0;
-      }
-
+      @page { size: 50mm 20mm; margin: 0; }
+ 
       body {
         background: #fff;
         display: block;
@@ -243,67 +219,59 @@
         margin: 0;
         min-height: unset;
       }
-
+ 
       .screen-header,
       .preview-label,
       .print-btn,
       .print-hint,
       .error-state { display: none !important; }
-
-      .preview-wrap {
-        display: block;
-        gap: 0;
-      }
-
+ 
+      .preview-wrap { display: block; }
+ 
       .label-outer {
         transform: none;
         box-shadow: none;
         border-radius: 0;
         margin-bottom: 0;
       }
-
-      .label {
-        width: 50mm;
-        height: 20mm;
-      }
+ 
+      .label { width: 50mm; height: 20mm; }
     }
-
+ 
   </style>
 </head>
 <body>
-
 <script>
-  // Parse URL parameters
   const params = new URLSearchParams(window.location.search);
   const ref      = params.get('ref')      || '';
   const name     = params.get('name')     || '';
   const status   = params.get('status')   || '';
   const supplier = params.get('supplier') || '';
   const date     = params.get('date')     || '';
-
+ 
   const hasData = ref || name || status || supplier || date;
-
+ 
   function esc(str) {
     const d = document.createElement('div');
     d.appendChild(document.createTextNode(str));
     return d.innerHTML;
   }
-
+ 
   if (hasData) {
     document.write(`
       <div class="screen-header">
         <h1>Sample Label Printer</h1>
         <p>Verify the label below, then print.</p>
       </div>
-
+ 
       <div class="preview-wrap">
-        <div class="preview-label">50 × 20 mm — preview at 4×</div>
-
+        <div class="preview-label">50 &times; 20 mm &mdash; preview at 4&times;</div>
+ 
         <div class="label-outer">
           <div class="label">
             <div class="top-row">
               <div class="sample-ref">${esc(ref)}</div>
-              <div class="status-badge">${esc(status)}</div>
+              ${status ? `<div class="status-badge">${esc(status)}</div>` : ''}
             </div>
             <div class="sample-name">${esc(name)}</div>
             <div class="bottom-row">
@@ -312,12 +280,12 @@
             </div>
           </div>
         </div>
-
+ 
         <button class="print-btn" onclick="window.print()">Print Label</button>
-
+ 
         <p class="print-hint">
           When the print dialog opens, set paper size to
-          <strong>50 × 20 mm</strong>, margins to <strong>None</strong>,
+          <strong>50 &times; 20 mm</strong>, margins to <strong>None</strong>,
           and scale to <strong>100%</strong>.<br>
           Save as PDF to email instead of printing.
         </p>
@@ -327,13 +295,12 @@
     document.write(`
       <div class="error-state">
         <h2>No label data found</h2>
-        <p>This page is opened via a Notion button that passes your database fields as URL parameters. Open it directly from your Notion record.</p>
+        <p>This page is opened via your Notion formula URL. Open it directly from your Notion record.</p>
         <p style="margin-top:12px">Expected URL format:</p>
-        <code>https://yourname.github.io/sample-labels/?ref=SR001&name=Sample+Name&status=Approved&supplier=Acme&date=31/03/2026</code>
+        <code>https://motohaus-powersports.github.io/sample-labels/?ref=PSR-4&amp;name=Coiled+Cable+%231&amp;status=Minor+Changes&amp;supplier=Saviour&amp;date=02/02/2026</code>
       </div>
     `);
   }
 </script>
-
 </body>
 </html>
