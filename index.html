@@ -4,17 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sample Label Printer</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
- 
-    :root {
-      --ink: #0f0f0f;
-      --mid: #555;
-      --bg: #f2f1ee;
-    }
- 
+    :root { --ink: #0f0f0f; --mid: #555; --bg: #f2f1ee; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
- 
     body {
       background: var(--bg);
       font-family: 'DM Mono', monospace;
@@ -26,37 +19,11 @@
       gap: 40px;
       padding: 40px 20px;
     }
- 
     .screen-header { text-align: center; }
- 
-    .screen-header h1 {
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--mid);
-      font-weight: 400;
-    }
- 
-    .screen-header p {
-      font-size: 12px;
-      color: #999;
-      margin-top: 6px;
-    }
- 
-    .preview-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
- 
-    .preview-label {
-      font-size: 11px;
-      color: #aaa;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
- 
+    .screen-header h1 { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); font-weight: 400; }
+    .screen-header p { font-size: 12px; color: #999; margin-top: 6px; }
+    .preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .preview-label { font-size: 11px; color: #aaa; letter-spacing: 0.1em; text-transform: uppercase; }
     .label-outer {
       box-shadow: 0 4px 32px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
       border-radius: 3px;
@@ -65,7 +32,6 @@
       transform-origin: top center;
       margin-bottom: calc(76px * 3);
     }
- 
     .print-btn {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -79,54 +45,17 @@
       border-radius: 2px;
       transition: background 0.15s;
     }
- 
     .print-btn:hover { background: #333; }
- 
-    .print-hint {
-      font-size: 11px;
-      color: #aaa;
-      text-align: center;
-      line-height: 1.6;
-      max-width: 340px;
-    }
- 
+    .print-hint { font-size: 11px; color: #aaa; text-align: center; line-height: 1.6; max-width: 340px; }
     .print-hint strong { color: var(--mid); }
- 
-    .error-state {
-      text-align: center;
-      padding: 40px;
-      background: #fff;
-      border-radius: 4px;
-      border: 1px solid #e0e0e0;
-      max-width: 440px;
-    }
- 
-    .error-state h2 {
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-      color: var(--ink);
-    }
- 
+    .error-state { text-align: center; padding: 40px; background: #fff; border-radius: 4px; border: 1px solid #e0e0e0; max-width: 440px; }
+    .error-state h2 { font-size: 13px; letter-spacing: 0.1em; margin-bottom: 12px; color: var(--ink); }
     .error-state p { font-size: 12px; color: var(--mid); line-height: 1.7; }
+    .error-state code { display: block; margin-top: 16px; background: #f5f5f5; padding: 10px 14px; font-size: 10px; color: #555; border-radius: 2px; word-break: break-all; text-align: left; }
  
-    .error-state code {
-      display: block;
-      margin-top: 16px;
-      background: #f5f5f5;
-      padding: 10px 14px;
-      font-size: 10px;
-      color: #555;
-      border-radius: 2px;
-      word-break: break-all;
-      text-align: left;
-    }
- 
-    /* ─── LABEL ─────────────────────────────────────────────── */
- 
+    /* ─── LABEL ─── */
     .label {
-      width: 50mm;
-      height: 20mm;
+      width: 50mm; height: 20mm;
       background: #fff;
       padding: 1.2mm 1.8mm;
       display: grid;
@@ -134,133 +63,70 @@
       gap: 0.3mm;
       font-family: 'DM Mono', monospace;
     }
+    .top-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5mm; }
+    .sample-ref { font-size: 6.5pt; font-weight: 700; color: #666; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+    .status-badge { font-size: 5pt; font-weight: 700; color: #111; border: 0.75pt solid #111; border-radius: 1.5pt; padding: 0.3mm 1mm; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.4; white-space: nowrap; flex-shrink: 0; }
+    .sample-name { font-size: 8.5pt; font-weight: 700; color: #000; line-height: 1; align-self: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.01em; }
+    .bottom-row { display: flex; justify-content: space-between; align-items: flex-end; border-top: 0.5pt solid #ccc; padding-top: 0.5mm; }
+    .supplier { font-size: 6pt; font-weight: 700; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 24mm; letter-spacing: 0.02em; }
+    .date { font-size: 6pt; font-weight: 700; color: #555; white-space: nowrap; letter-spacing: 0.02em; }
  
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1.5mm;
-    }
- 
-    .sample-ref {
-      font-size: 6.5pt;
-      font-weight: 700;
-      color: #666;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      line-height: 1;
-      white-space: nowrap;
-    }
- 
-    .status-badge {
-      font-size: 5pt;
-      font-weight: 700;
-      color: #111;
-      border: 0.75pt solid #111;
-      border-radius: 1.5pt;
-      padding: 0.3mm 1mm;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      line-height: 1.4;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
- 
-    .sample-name {
-      font-size: 8.5pt;
-      font-weight: 700;
-      color: #000;
-      line-height: 1;
-      align-self: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: -0.01em;
-    }
- 
-    .bottom-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-top: 0.5pt solid #ccc;
-      padding-top: 0.5mm;
-    }
- 
-    .supplier {
-      font-size: 6pt;
-      font-weight: 700;
-      color: #555;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 24mm;
-      letter-spacing: 0.02em;
-    }
- 
-    .date {
-      font-size: 6pt;
-      font-weight: 700;
-      color: #555;
-      white-space: nowrap;
-      letter-spacing: 0.02em;
-    }
- 
-    /* ─── PRINT ─────────────────────────────────────────────── */
- 
+    /* ─── PRINT ─── */
     @media print {
       @page { size: 50mm 20mm; margin: 0; }
- 
-      body {
-        background: #fff;
-        display: block;
-        padding: 0;
-        margin: 0;
-        min-height: unset;
-      }
- 
-      .screen-header,
-      .preview-label,
-      .print-btn,
-      .print-hint,
-      .error-state { display: none !important; }
- 
+      body { background: #fff; display: block; padding: 0; margin: 0; min-height: unset; }
+      .screen-header, .preview-label, .print-btn, .print-hint, .error-state { display: none !important; }
       .preview-wrap { display: block; }
- 
-      .label-outer {
-        transform: none;
-        box-shadow: none;
-        border-radius: 0;
-        margin-bottom: 0;
-      }
- 
+      .label-outer { transform: none; box-shadow: none; border-radius: 0; margin-bottom: 0; }
       .label { width: 50mm; height: 20mm; }
     }
- 
   </style>
 </head>
 <body>
 <script>
-  // Use location.search but also handle # fragments by reading the raw href
-  // Notion sometimes passes # unencoded which breaks URLSearchParams
-  const raw = window.location.href;
-  const qIndex = raw.indexOf('?');
-  const queryString = qIndex !== -1 ? raw.slice(qIndex + 1).split('#')[0] : '';
-  const params = new URLSearchParams(queryString);
+  // Robustly parse the URL even when Notion passes unencoded spaces and # characters
+  // Strategy: take the full href, split on '?' then parse key=value pairs manually
+  function parseMessyURL() {
+    const href = window.location.href;
+    const qIndex = href.indexOf('?');
+    if (qIndex === -1) return {};
  
-  const ref      = params.get('ref')      || '';
-  const name     = params.get('name')     || '';
-  const status   = params.get('status')   || '';
-  const supplier = params.get('supplier') || '';
-  const date     = params.get('date')     || '';
- 
-  // Also grab anything after # in the name param in case it got split
-  const hashIndex = raw.indexOf('?');
-  let fullName = name;
-  if (!name.includes('#') && raw.includes('%23')) {
-    fullName = decodeURIComponent(raw.match(/name=([^&]*)/)?.[1] || '') || name;
+    // Get everything after '?' and split on '&' 
+    // We can't use URLSearchParams because unencoded # terminates it early
+    const raw = href.slice(qIndex + 1);
+    
+    // Split on & but only when followed by a known param name
+    // This handles spaces and # in values
+    const result = {};
+    const knownParams = ['ref', 'name', 'status', 'supplier', 'date'];
+    
+    // Build a regex that splits on & only when followed by a known key=
+    const splitPattern = /&(?=ref=|name=|status=|supplier=|date=)/;
+    const pairs = raw.split(splitPattern);
+    
+    pairs.forEach(pair => {
+      const eqIndex = pair.indexOf('=');
+      if (eqIndex === -1) return;
+      const key = pair.slice(0, eqIndex).trim();
+      const val = pair.slice(eqIndex + 1)
+        .replace(/\+/g, ' ')           // decode + as space
+        .replace(/%23/gi, '#')          // decode %23 as #
+        .replace(/%20/gi, ' ')          // decode %20 as space
+        .replace(/%2F/gi, '/')          // decode %2F as /
+        .trim();
+      if (knownParams.includes(key)) result[key] = val;
+    });
+    
+    return result;
   }
  
-  const hasData = ref || fullName || status || supplier || date;
+  const p = parseMessyURL();
+  const ref      = p.ref      || '';
+  const name     = p.name     || '';
+  const status   = p.status   || '';
+  const supplier = p.supplier || '';
+  const date     = p.date     || '';
+  const hasData  = ref || name || status || supplier || date;
  
   function esc(str) {
     const d = document.createElement('div');
@@ -274,26 +140,22 @@
         <h1>Sample Label Printer</h1>
         <p>Verify the label below, then print.</p>
       </div>
- 
       <div class="preview-wrap">
         <div class="preview-label">50 &times; 20 mm &mdash; preview at 4&times;</div>
- 
         <div class="label-outer">
           <div class="label">
             <div class="top-row">
               <div class="sample-ref">${esc(ref)}</div>
               ${status ? `<div class="status-badge">${esc(status)}</div>` : ''}
             </div>
-            <div class="sample-name">${esc(fullName)}</div>
+            <div class="sample-name">${esc(name)}</div>
             <div class="bottom-row">
               <div class="supplier">${esc(supplier)}</div>
               <div class="date">${esc(date)}</div>
             </div>
           </div>
         </div>
- 
         <button class="print-btn" onclick="window.print()">Print Label</button>
- 
         <p class="print-hint">
           When the print dialog opens, set paper size to
           <strong>50 &times; 20 mm</strong>, margins to <strong>None</strong>,
