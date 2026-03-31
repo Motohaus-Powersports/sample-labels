@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sample Label Printer</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
   <style>
  
     :root {
@@ -17,7 +17,7 @@
  
     body {
       background: var(--bg);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'DM Mono', monospace;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -30,12 +30,11 @@
     .screen-header { text-align: center; }
  
     .screen-header h1 {
-      font-family: 'DM Mono', monospace;
       font-size: 11px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--mid);
-      font-weight: 500;
+      font-weight: 400;
     }
  
     .screen-header p {
@@ -52,7 +51,6 @@
     }
  
     .preview-label {
-      font-family: 'DM Mono', monospace;
       font-size: 11px;
       color: #aaa;
       letter-spacing: 0.1em;
@@ -104,7 +102,6 @@
     }
  
     .error-state h2 {
-      font-family: 'DM Mono', monospace;
       font-size: 13px;
       letter-spacing: 0.1em;
       margin-bottom: 12px;
@@ -118,7 +115,6 @@
       margin-top: 16px;
       background: #f5f5f5;
       padding: 10px 14px;
-      font-family: 'DM Mono', monospace;
       font-size: 10px;
       color: #555;
       border-radius: 2px;
@@ -132,10 +128,10 @@
       width: 50mm;
       height: 20mm;
       background: #fff;
-      padding: 1.5mm 2mm;
+      padding: 1.2mm 1.8mm;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 0.6mm;
+      gap: 0.3mm;
       font-family: 'DM Mono', monospace;
     }
  
@@ -147,34 +143,34 @@
     }
  
     .sample-ref {
-      font-size: 5pt;
-      font-weight: 500;
-      color: #777;
-      letter-spacing: 0.06em;
+      font-size: 6.5pt;
+      font-weight: 700;
+      color: #666;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       line-height: 1;
       white-space: nowrap;
     }
  
     .status-badge {
-      font-size: 4pt;
-      font-weight: 500;
+      font-size: 5pt;
+      font-weight: 700;
       color: #111;
-      border: 0.5pt solid #111;
+      border: 0.75pt solid #111;
       border-radius: 1.5pt;
       padding: 0.3mm 1mm;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
       line-height: 1.4;
       white-space: nowrap;
       flex-shrink: 0;
     }
  
     .sample-name {
-      font-size: 8pt;
-      font-weight: 500;
+      font-size: 8.5pt;
+      font-weight: 700;
       color: #000;
-      line-height: 1.1;
+      line-height: 1;
       align-self: center;
       white-space: nowrap;
       overflow: hidden;
@@ -186,23 +182,25 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      border-top: 0.3pt solid #ddd;
-      padding-top: 0.6mm;
+      border-top: 0.5pt solid #ccc;
+      padding-top: 0.5mm;
     }
  
     .supplier {
-      font-size: 4pt;
-      color: #666;
+      font-size: 6pt;
+      font-weight: 700;
+      color: #555;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 26mm;
+      max-width: 24mm;
       letter-spacing: 0.02em;
     }
  
     .date {
-      font-size: 4pt;
-      color: #666;
+      font-size: 6pt;
+      font-weight: 700;
+      color: #555;
       white-space: nowrap;
       letter-spacing: 0.02em;
     }
@@ -242,14 +240,27 @@
 </head>
 <body>
 <script>
-  const params = new URLSearchParams(window.location.search);
+  // Use location.search but also handle # fragments by reading the raw href
+  // Notion sometimes passes # unencoded which breaks URLSearchParams
+  const raw = window.location.href;
+  const qIndex = raw.indexOf('?');
+  const queryString = qIndex !== -1 ? raw.slice(qIndex + 1).split('#')[0] : '';
+  const params = new URLSearchParams(queryString);
+ 
   const ref      = params.get('ref')      || '';
   const name     = params.get('name')     || '';
   const status   = params.get('status')   || '';
   const supplier = params.get('supplier') || '';
   const date     = params.get('date')     || '';
  
-  const hasData = ref || name || status || supplier || date;
+  // Also grab anything after # in the name param in case it got split
+  const hashIndex = raw.indexOf('?');
+  let fullName = name;
+  if (!name.includes('#') && raw.includes('%23')) {
+    fullName = decodeURIComponent(raw.match(/name=([^&]*)/)?.[1] || '') || name;
+  }
+ 
+  const hasData = ref || fullName || status || supplier || date;
  
   function esc(str) {
     const d = document.createElement('div');
@@ -273,7 +284,7 @@
               <div class="sample-ref">${esc(ref)}</div>
               ${status ? `<div class="status-badge">${esc(status)}</div>` : ''}
             </div>
-            <div class="sample-name">${esc(name)}</div>
+            <div class="sample-name">${esc(fullName)}</div>
             <div class="bottom-row">
               <div class="supplier">${esc(supplier)}</div>
               <div class="date">${esc(date)}</div>
